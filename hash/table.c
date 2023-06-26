@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define MAX_CHAR 30
 
 typedef struct sNode{
 	struct sNode *next;
 	struct sNode *prev;
-	char name[MAX_CHAR];
+	char name[100];
 }Node;
 
 typedef struct sBucket{
@@ -47,7 +46,7 @@ int removeName(Hash *hash, char *name);
 
 int main(){
   Hash* hashTable = createHashTable();
-  char name[MAX_CHAR];
+  char name[100];
   int option;
   int ordinate_bucket;
   
@@ -123,7 +122,7 @@ int main(){
 }
 
 void insertNamesFromFile(Hash *hashTable){
-	char name[MAX_CHAR];
+	char name[100];
 	FILE *file = fopen("nomes.txt", "r");
 
 	if (file == NULL){
@@ -131,7 +130,7 @@ void insertNamesFromFile(Hash *hashTable){
   	}
   	else{
     	while(!feof(file)){    
-			fgets(name, MAX_CHAR, file);
+			fgets(name, 100, file);
 			name[strcspn(name, "\n")] = '\0';
 			insertName(hashTable, name);
   		}
@@ -347,16 +346,24 @@ Node *partition(Node *head, Node *tail) {
 
     for (Node *j = head; j != pivot; j = j->next) {
         if (strcmp(j->name, pivot->name) <= 0) {
-            i = (i == NULL) ? head : i->next;
-            char temp[MAX_CHAR];
+            if (i == NULL) {
+                i = head;
+            } else {
+                i = i->next;
+            }
+            char temp[100];
             strcpy(temp, i->name);
             strcpy(i->name, j->name);
             strcpy(j->name, temp);
         }
     }
 
-    i = (i == NULL) ? head : i->next;
-    char temp[MAX_CHAR];
+    if (i == NULL) {
+        i = head;
+    } else {
+        i = i->next;
+    }
+    char temp[100];
     strcpy(temp, i->name);
     strcpy(i->name, pivot->name);
     strcpy(pivot->name, temp);
